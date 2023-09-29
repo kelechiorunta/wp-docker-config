@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: amd64/mysql
+    platform: linux/amd64/v3
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - kelechi-orunta
+
+  wordpress:
+    image: amd64/wordpress
+    depends_on:
+      - mysql
+    ports:
+      - "1234:80"
+    volumes:
+      - wp_data:/var/www/html/wp-content
+      - .:/var/www/html/wp-content/themes/kelechi-orunta
+    restart: always
+    environment:
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+    networks:
+      - kelechi-orunta
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    depends_on:
+      - mysql
+    ports:
+      - "1235:80"
+    restart: always
+    environment:
+      PMA_HOST: wordpress
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - kelechi-orunta
+
+volumes:
+  db_data: {}
+  wp_data: {}
+
+networks:
+  kelechi-orunta:
