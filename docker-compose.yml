@@ -3,8 +3,7 @@ version: '3'
 services:
 
   mysql:
-    image: amd64/mysql
-    platform: linux/amd64/v3
+    image: mysql
     volumes:
       - db_data:/var/lib/mysql
     restart: always
